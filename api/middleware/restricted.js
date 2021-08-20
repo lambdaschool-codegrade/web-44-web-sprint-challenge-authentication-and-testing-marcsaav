@@ -1,5 +1,21 @@
+const jwt = require('jsonwebtoken')
+const { TOKEN_SECRET } = require('../config/secret')
+
 module.exports = (req, res, next) => {
-  next();
+  const token = req.headers.authorization
+
+  if(!token) {
+    next({ status: 422, message: 'token required'})
+  } else {
+    jwt.verify(token, TOKEN_SECRET, (err, decoded) => {
+      if(err) {
+        next({ status: 401, message: 'token invalid'})
+      } else {
+        req.decodedJwt = decoded
+        next()
+      }
+    })
+  }
   /*
     IMPLEMENT
 

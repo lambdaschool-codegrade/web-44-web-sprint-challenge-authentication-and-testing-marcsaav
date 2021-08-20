@@ -5,8 +5,8 @@ const findById = async (id) => {
     return user
 }
 
-const findBy = async (filter) => {
-    const user = await db('users').where({ filter }).first()
+const findBy = async (username) => {
+    const user = await db('users').where(`username`, username).first()
     return user
 }
 

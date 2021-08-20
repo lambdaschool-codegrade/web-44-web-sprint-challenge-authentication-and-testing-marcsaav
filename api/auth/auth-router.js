@@ -61,8 +61,14 @@ router.post('/register', checkRequest, checkUsernameUnique, async (req, res, nex
   */
 });
 
-router.post('/login', checkRequest, validateCredentials, (req, res) => {
-  res.end('implement login, please!');
+router.post('/login', checkRequest, validateCredentials, async (req, res, next) => {
+  try {
+    const user = await User.findBy(req.body.username)
+    const token = createToken(user)
+    res.status(200).json({ message: `welcome, ${user.username}`, token: token})
+  } catch(err) {
+    next(err)
+  }
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
